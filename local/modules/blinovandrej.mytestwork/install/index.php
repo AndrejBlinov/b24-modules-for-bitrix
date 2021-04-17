@@ -97,7 +97,7 @@ Class blinovandrej_mytestwork extends CModule
 			{
 				$this->UnInstallDB() ;
 			}
-
+			$this->UnInstallFiles();
 			\Bitrix\Main\ModuleManager::UnRegisterModule($this->MODULE_ID);
 			$APPLICATION->IncludeAdminFile(GetMessage($this->NAME_MODULE."_FORM_UNSTALL_TITLE"), $this->GetPath()."/install/unstep.php");
 		}
@@ -108,6 +108,7 @@ Class blinovandrej_mytestwork extends CModule
 	//установленый компонент
 	function UnInstallFiles()
 	{
+		DeleteDirFilesEx("/local/components/BlinovAndrey.b24list") ;
 		return true;
 	}
 	//заполняем справочник статусов
@@ -129,6 +130,17 @@ Class blinovandrej_mytestwork extends CModule
 
 	function InstallFiles()
 	{
+		//модуль копируется в local/modules, папки components может не существовать.
+		$path = $_SERVER["DOCUMENT_ROOT"]."/local";
+		if(file_exists($path. "/components/"))
+		{
+			CopyDirFiles($path."/modules/blinovandrej.mytestwork/install/components", $path."/components/", true, true);
+		}
+		else{
+			//Создаем папку components, если не существует 
+			$ret = mkdir($path."/components/");
+			CopyDirFiles($path."/modules/blinovandrej.mytestwork/install/components", $path."/components/", true, true);
+		}
 		return true;
 	}
 
@@ -163,10 +175,7 @@ Class blinovandrej_mytestwork extends CModule
 			}else{
 				$DB->Commit();
 			}
-		}else{
-			return false;
 		}
-	
 		return $iblockType;
 	}
 	// функция добавления инфоблока
@@ -281,6 +290,25 @@ Class blinovandrej_mytestwork extends CModule
 		$PR['SYSTEM'] = $data['SYSTEM'];
 		$PR['MODEL'] = $data['MODEL'];
 		return $PR;
+	}
+
+	function DelIblocks(){
+		global $DB;
+		CModule::IncludeModule("iblock");
+
+		$DB->StartTransaction();
+		if (!CIBlockType::Delete($this->IBLOCK_TYPE)){
+			$DB->Rollback();
+			CAdminMessage::ShowMessage(Array(
+				"TYPE" => "ERROR",
+				"MESSAGE" => GetMessage("VTEST_IBLOCK_TYPE_DELETE_ERROR"),
+				"DETAILS" => "",
+				"HTML" => true
+			));
+			return false;
+		}
+		$DB->Commit();
+		return true;
 	}
 }
 ?>

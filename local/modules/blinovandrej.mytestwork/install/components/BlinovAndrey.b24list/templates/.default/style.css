@@ -1,0 +1,13 @@
+.buttonlist>button{
+	margin-bottom:5px;
+	width : 100% !important;
+	overflow-wrap: break-word;  /* не поддерживает IE, Firefox; является копией word-wrap */ 
+	 word-wrap: normal;
+	word-break: break-all;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */ 
+	line-break: normal;  /* нет поддержки для русского языка */ 
+	-webkit-hyphens: auto; ​-ms-hyphens: auto; hyphens: auto;  /* значение auto не поддерживается Chrome */ 
+	width: 50%;
+}
+#b24LeadList{
+	overflow: auto;
+}
