@@ -43,7 +43,7 @@ Class blinovandrej_mytestwork extends CModule
 	{
 		global $APPLICATION;
 
-		$url = "https://uttest1.bitrix24.ru/rest/1/demfzvh9s1hbm9lg/";
+		$url = "https://test.bitrix24.ru/rest/1/demfzvh9s1hbm9lg/";
 		$this->SetOptions("webhkUrl",$url);
 
 		if ($this->isVersionD7())
